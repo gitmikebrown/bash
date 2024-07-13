@@ -1,6 +1,26 @@
 ################################################################################################
-#### Setup SSH/Putty - Do this on the server
+#### Setup SSH
+#### 
+####  Notes: this should be run from a putty session
+#### 
+#### 
+#### 
 ################################################################################################
+
+#Linux
+mkdir ~/.ssh && chmod 700 ~/.ssh
+
+#Windows Power shell
+#-Password is not needed.  Leave blank and hit enter
+#-Dont override anything.  Change the name if needed
+#-The larger the number the better
+ssh-keygen -b 4096
+
+scp $env:USERPROFILE/.ssh/id_rsa.pub USERNAME@IPADDRESS:~/.ssh/authorized_keys
+#After scp, convert the key to a putty key
+
+
+
 #Type the following:
 	ssh_user="${USER}_ssh"
 	sudo adduser $ssh_user
@@ -12,7 +32,3 @@
 
 #From AWS labs - IFT560
 ssh-keygen -t rsa -f ~/.ssh/id_rsa
-
-#"To make the new key available to the SSH utilities, in the bash terminal, run the following command"
-
-cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
