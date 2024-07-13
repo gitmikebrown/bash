@@ -1,0 +1,18 @@
+################################################################################################
+#### Setup SSH/Putty - Do this on the server
+################################################################################################
+#Type the following:
+	ssh_user="${USER}_ssh"
+	sudo adduser $ssh_user
+	sudo usermod --append --groups sudo $ssh_user;
+
+#Get the IP Address
+	hostname -I
+
+
+#From AWS labs - IFT560
+ssh-keygen -t rsa -f ~/.ssh/id_rsa
+
+#"To make the new key available to the SSH utilities, in the bash terminal, run the following command"
+
+cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys

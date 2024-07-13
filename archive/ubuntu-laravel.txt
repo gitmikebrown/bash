@@ -1,0 +1,523 @@
+################################################################################################
+#### Start
+################################################################################################
+sudo apt -y update;
+sudo apt -y upgrade;
+sudo apt -y dist-upgrade;
+sudo apt -y autoremove;
+sudo apt -y autoclean;
+
+#OR
+
+sudo apt -y update; sudo apt -y upgrade; sudo apt -y dist-upgrade; sudo apt -y autoremove; sudo apt -y autoclean;
+
+#For ubuntu LTS only
+do-release-upgrade
+
+#List upgradable
+apt list --upgradable
+
+################################################################################################
+#### Install tools
+################################################################################################
+
+
+sudo apt install -y git zip unzip tree curl acl;
+
+################################################################################################
+#### NVM
+################################################################################################
+
+#Check to see what the latest version is (ex: 0.39.7)
+https://github.com/nvm-sh/nvm
+
+#install latest version of node by first installing NVM (Node Version Manager)
+	curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash; source ~/.bashrc;
+# download and install Node.js
+	nvm install 20
+#enable it w/o having to restart the Putty Session
+	export NVM_DIR="$HOME/.nvm"
+#Instal latest version
+	nvm install $(nvm ls-remote | grep -i Latest | awk '{print $1}' | tail -n 1 | sed 's/v//');
+
+
+
+
+################################################################################################
+#### Apache WebServer
+################################################################################################
+
+#To see a list of all Apache2 modules
+#apt search libapache2-mod
+ 
+#>update package list;
+    sudo add-apt-repository ppa:ondrej/apache2 -y;
+#>Install start enable;
+    sudo apt -y install apache2; sudo systemctl start apache2; sudo systemctl enable apache2;
+#>Enable URL rewritting;
+    sudo apt -y install apache2; sudo systemctl start apache2; sudo systemctl enable apache2;
+    
+
+
+#See what user apache2 is running as
+ps aux | egrep '(apache|httpd)'
+
+
+
+
+################################################################################################
+#### PHP
+################################################################################################
+
+
+#Check what extention are needed at this link.  Look under the commonly asked questions.
+https://herd.laravel.com/windows
+
+
+#From a video - https://www.youtube.com/watch?v=q34NwPjD8dk
+sudo apt install -y php php-common php-cli php-gd php-mysqlnd php-curl php-intl php-mbstring php-bcmath php-xml php-zip
+
+#Install PHP
+#>update package list;
+sudo add-apt-repository ppa:ondrej/php -y; sudo apt update; sudo apt upgrade -y;
+sudo apt-get install php8.3-cli php8.3-cgi php8.3-curl php8.3-dom php8.3-mbstring php8.3-xml php8.3-mysql php8.3-pgsql php-bcmath php-json php-tokenizer php-zip php8.3-oauth php8.3-redis -y;
+sudo apt-get install libapache2-mod-php -y;
+sudo systemctl reload apache2; sudo apt update; sudo apt upgrade -y;
+
+
+#List all PHP packages except any with the name apache
+apt list | grep -i php | grep -v apache | awk '{print $1}' 
+#List all PHP packages
+apt list | grep -i php | awk '{print $1}'
+
+apt list | grep -i pdo | awk '{print $1}'
+
+################################################################################################
+#### Composer
+################################################################################################
+
+
+curl -sS https://getcomposer.org/installer -o /tmp/composer-setup.php;
+sudo php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer;
+
+#Other way of trying
+#curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/bin --filename=composer
+sudo composer self-update;
+
+#Version
+composer --version
+
+################################################################################################
+#### Groups
+################################################################################################
+
+#View all groups and users in those groups
+    cat /etc/group
+
+#View groups with the user www-data
+    cat /etc/group | grep www-data
+
+#View groups that you are in
+    cat /etc/group | grep $USER;
+
+#delete a user from a group
+    #gpasswd --delete user group
+    sudo gpasswd --delete mike www-data
+    
+#delete a group
+    groupdel mygroup
+
+#Create Groups
+    sudo groupadd frontEnd;
+    sudo groupadd appDev;
+    sudo groupadd dataBase;
+    sudo groupadd webmasters;
+
+#Add self to all groups
+    sudo usermod --append --groups frontEnd $USER;
+    sudo usermod --append --groups appDev $USER;
+    sudo usermod --append --groups dataBase $USER;
+    sudo usermod --append --groups webmasters $USER;
+
+    sudo usermod --append --groups www-data $USER;
+	sudo usermod --append --groups gpio rdesktop;
+
+
+
+#EC2 Ubuntu Groups to be added to
+
+USER2ADD=brown;
+sudo usermod --append --groups adm $USER2ADD;
+sudo usermod --append --groups dialout $USER2ADD;
+sudo usermod --append --groups cdrom $USER2ADD;
+sudo usermod --append --groups floppy $USER2ADD;
+sudo usermod --append --groups sudo $USER2ADD;
+sudo usermod --append --groups audio $USER2ADD;
+sudo usermod --append --groups dip $USER2ADD;
+sudo usermod --append --groups video $USER2ADD;
+sudo usermod --append --groups plugdev $USER2ADD;
+sudo usermod --append --groups netdev $USER2ADD;
+sudo usermod --append --groups lxd $USER2ADD;
+
+
+
+#Ensure /etc/gshadow is in sync with changes to /etc/group  AKA RUN AFTER ANY CHANGES
+    sudo grpck;
+	sudo shutdown -r now;
+
+#helpfull link
+#https://www.redhat.com/sysadmin/linux-groups
+#More info found here: https://ubuntu.com/server/docs/how-to-use-apache2-modules  
+
+
+################################################################################################
+#### Laravel
+################################################################################################
+
+#Remove html folder
+sudo rm /var/www/html -rf;
+
+#Remove laravel folder (if there is one)
+#sudo rm /var/www/laravel -rf;
+
+#Make a laravel folder
+sudo install -m 774 -o $(whoami) -g $(whoami) -d /var/www/laravel;
+
+#Install Laravel
+composer create-project laravel/laravel /var/www/laravel;
+
+#Change owner of project to the webserver so it can run the app
+apache2Username=$(ps aux | grep "apache" | awk '{print $1}' | grep -v root | head -n 1); sudo chown -R $apache2Username:webmasters /var/www/laravel;
+
+#Create the Laravel Log file and change its permissions to make it the same as everything else.
+touch /var/www/laravel/storage/logs/laravel.log;
+apache2Username=$(ps aux | grep "apache" | awk '{print $1}' | grep -v root | head -n 1); sudo chown -R $apache2Username:webmasters /var/www/laravel/storage/logs/laravel.log;
+
+
+#Update the packages
+    cd /var/www/laravel;
+    #>For the production server, run this
+        sudo composer install --optimize-autoloader --no-dev;
+
+    #>For the development server, run this
+        su $(whoami); 
+	composer update;
+
+#.env Db info
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=laravel
+DB_USERNAME=laravel
+DB_PASSWORD=Qazxsw2!
+
+##########
+#Troubleshooting
+#########
+
+#laravel -V not working
+    #Make sure laravel is installed and updated
+        composer global require laravel/installer;
+
+    #Edit the path
+        nano $HOME/.bashrc;
+        #Paste the below into the file
+        export PATH="$PATH:$HOME/.config/composer/vendor/bin";
+
+    
+    #reload .bashrc file
+    source $HOME/.bashrc;
+    
+    #Check to see if it is working
+    laravel -V;
+    
+#There's no .env file
+    #Check to see if there is a .env.example file.
+    cd /var/www/laravel; ll;
+
+    #If there is a .env.example file, copy it and name it .env
+    sudo cp .env.example .env
+
+#The .env file does not have an APP_KEY
+    cat /var/www/laravel/.env;
+    #Create a key
+    cd /var/www/laravel;
+    sudo php artisan key:generate;
+
+
+
+################################################################################################
+#### Apache WebServer Part 2
+################################################################################################
+
+
+apache2Username=$(ps aux | grep "apache" | awk '{print $1}' | grep -v root | head -n 1);
+APACHE2_LOG_LOCATION="/var/www/laravel/storage/logs/serverlogs";
+sudo install -m 654 -o $apache2Username -g webmasters -d $APACHE2_LOG_LOCATION;
+sudo echo "<VirtualHost *:80>
+    ServerName localhost
+    DocumentRoot /var/www/laravel/public
+
+    <Directory /var/www/laravel/public>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    ErrorLog $APACHE2_LOG_LOCATION/error.log
+    CustomLog $APACHE2_LOG_LOCATION/access.log combined
+</VirtualHost>" | sudo tee /etc/apache2/sites-available/laravel.conf;
+
+
+#Turn on laravel, turn off default, restart apache2
+sudo a2ensite laravel.conf; sudo a2dissite 000-default.conf; sudo systemctl reload apache2;
+
+#change log files from root to correct user and group
+sudo chown -R $apache2Username:webmasters "$APACHE2_LOG_LOCATION/error.log";
+sudo chown -R $apache2Username:webmasters "$APACHE2_LOG_LOCATION/access.log";
+
+
+
+
+#Helpful
+    #File paths
+        #cd /var/www/laravel
+        #cd /var/www/laravel/z_serverlogs
+        #cd /etc/apache2/sites-available/
+
+    #disable laravel.conf
+        #sudo a2dissite laravel.conf;
+
+    #Remove laravel file (if there is one)
+	#sudo rm /etc/apache2/sites-available/laravel.conf -rf;
+
+#Notes
+    #****If you don't make the logs folder, apache2 will crash****
+
+    #(OPTION) Add the below to the conf file under DocumentRoot
+    #ServerAdmin mike.j.brown@outlook.com
+
+################################################################################################
+#### SSH
+################################################################################################
+
+
+sudo apt install openssh-server -y
+#Generate a Key>
+ssh-keygen -t rsa -N '';
+
+chmod 600 /home/$USER/.ssh/id_rsa*
+cp /home/$USER/.ssh/id_rsa /home/$USER/.ssh/authorized_keys
+
+
+#Convert it to a pem format
+ssh-keygen -f /home/$USER/.ssh/authorized_keys -e -m pem
+
+
+
+#Local VM
+cat /home/$USER/.ssh/id_rsa.pub; cat /home/$USER/.ssh/id_rsa; cat /home/$USER/.ssh/authorized_keys;
+
+
+#EC2
+cat /home/$USER/.ssh/id_rsa.pub;
+
+#>Open the firewall for SSH;
+sudo ufw allow ssh;
+
+
+################################################################################################
+#### github
+################################################################################################
+
+#Helpfull Commnads - Need to be run in the Directory of the repository.
+
+
+#set email>402 Ubuntu
+git config --global user.email "mike.j.brown@outlook.com";
+
+#set name
+git config --global user.name "Mike Brown";
+
+#Status of files in repository
+#cd /var/www/laravel;
+git status;
+
+#If files need to be added.  The . is within the current folder.  Change as needed.
+git add .;
+
+#Commit
+git commit -m "say something here";
+
+#Push
+git push -u origin main;
+
+#More info on git
+#https://www.atlassian.com/git/tutorials/setting-up-a-repository
+
+################################################################################################
+#### Users
+################################################################################################ 
+
+#Should be installed already, but if not:
+sudo apt-get install adduser
+
+#add me as a new user
+sudo adduser brown
+
+
+#All info on users
+#https://askubuntu.com/questions/410244/is-there-a-command-to-list-all-users-also-to-add-delete-modify-users-in-the
+
+
+
+################################################################################################
+#### ACL - Access Control List
+################################################################################################
+
+sudo apt install acl
+
+#Check file/folder permissions - Below is a check on a laravel folder 
+getfacl /var/www/laravel;
+
+
+
+#Helpful link
+# https://www.youtube.com/watch?v=HNAjeW9iRcw
+
+################################################################################################
+#### Status and info
+################################################################################################
+
+#Get the IP Address
+hostname -I; >>Used to get IP address
+
+#Check status of install;
+systemctl status apache2 --no-pager -l;
+APACHE2_Status=$(systemctl status apache2 | grep Active);echo "Apache2:$APACHE2_Status";
+systemctl status nginx --no-pager -l;
+NGINX_Status=$(systemctl status NGINX | grep Active);echo "NGINX:$NGINX_Status";
+systemctl status mysql --no-pager -l;
+MYSQL_Status=$(systemctl status MYSQL | grep Active);echo "MYSQL:$MYSQL_Status";
+sudo -u www-data composer --version
+
+#Check the Hash of the composer download
+HASH=`curl -sS https://composer.github.io/installer.sig`;
+php -r "if (hash_file('SHA384', '/tmp/composer-setup.php') === '$HASH') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+
+
+
+
+
+
+################################################################################################
+#### Nginx WebServer.  Don't use.
+################################################################################################
+
+
+#>>Nginx Setup
+#>update package list;
+sudo add-apt-repository ppa:ondrej/nginx-mainline -y;
+sudo apt-get install nginx -y;
+sudo systemctl start nginx;
+sudo systemctl enable nginx;
+NGINXFN=laravel
+cd /etc/nginx/sites-available/;
+#sudo rm laravel
+#sudo rm laravel.conf
+sudo git clone https://github.com/mjbrow17/ULNConfig.git;
+cd /etc/nginx/sites-available/ULNConfig/;
+sudo mv laravel /etc/nginx/sites-available/;
+cd /etc/nginx/sites-available/;
+sudo rm ULNConfig -rf;
+MYHOSTNAME=$(hostname -I);
+sudo sed -i "s/$MYHOSTNAME/" "$NGINXFN";
+sudo ln -s "/etc/nginx/sites-available/$NGINXFN" /etc/nginx/sites-enabled/
+sudo systemctl reload nginx;
+sudo systemctl restart nginx;
+cat "$NGINXFN";
+#Open the firewall
+sudo ufw allow 'Nginx Full';
+
+
+################################################################################################
+#### SSH Keys  
+################################################################################################
+
+
+
+
+################################################################################################
+#### Install Bootstrap
+################################################################################################
+
+#Helpful website
+#https://www.linode.com/docs/guides/how-to-install-use-node-version-manager-nvm/
+
+cd /var/www/laravel
+
+#install nvm (Node Version Manager)
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
+
+#reset
+source ~/.bashrc
+
+nvm install 18.1.0
+
+
+composer require laravel/ui;
+php artisan ui bootstrap --auth;
+npm install;
+npm run dev;
+
+npm install
+nvm install
+npm install vite;
+nvm install node
+npm run vite;
+npm run build;
+npm install --legacy-peer-deps
+nvm use node
+
+################################################################################################
+#### Laravel Sail
+################################################################################################
+
+
+#https://laravel.com/docs/10.x/starter-kits
+composer require laravel/breeze --dev
+
+
+php artisan breeze:install
+php artisan migrate
+
+#Need to run this at some point as sail installs a log file but does so with the current users username.
+apache2Username=$(ps aux | grep "apache" | awk '{print $1}' | grep -v root | head -n 1); sudo chown -R $apache2Username:webmasters /var/www/laravel;
+
+npm install
+npm run build
+
+
+################################################################################################
+#### Laravel Vite (a laravel mix replacement)
+################################################################################################
+https://laravel.com/docs/10.x/vite
+
+################################################################################################
+#### Helpful sites
+################################################################################################
+
+
+#https://www.howtoforge.com/tutorial/install-laravel-on-ubuntu-for-apache/ 
+
+
+#chmod
+# https://www.youtube.com/watch?v=MFQpdELKTLc
+
+#Folder and user permissions for laravel
+# https://stackoverflow.com/questions/30639174/how-to-set-up-file-permissions-for-laravel
+
+#https://media.geeksforgeeks.org/wp-content/uploads/20230504182533/50-(1).webp
+
+
+

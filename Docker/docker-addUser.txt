@@ -1,0 +1,9 @@
+
+#note, if using SSH, the USER may be name_ssh
+
+docker_user="${USER}";
+sudo addgroup -system docker;
+sudo adduser $docker_user docker;
+newgrp docker;
+sudo snap disable docker;
+sudo snap enable docker;

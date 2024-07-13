@@ -1,0 +1,12 @@
+#install docker
+sudo apt install docker.io
+
+#enable the docker service
+sudo systemctl enable docker
+
+
+#make sure docker is running
+sudo systemctl status docker
+
+#If docker is not running, try:
+sudo systemctl start docker

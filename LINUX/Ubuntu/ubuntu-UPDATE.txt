@@ -1,0 +1,21 @@
+################################################################################################
+#### Start
+################################################################################################
+sudo apt -y update;
+sudo apt -y upgrade;
+sudo apt -y dist-upgrade;
+sudo apt -y autoremove;
+sudo apt -y autoclean;
+
+#OR
+
+sudo apt -y update; sudo apt -y upgrade; sudo apt -y dist-upgrade; sudo apt -y autoremove; sudo apt -y autoclean;
+
+#For ubuntu LTS only
+do-release-upgrade
+
+#List upgradable
+apt list --upgradable
+
+#Full upgrade
+sudo apt full-upgrade
