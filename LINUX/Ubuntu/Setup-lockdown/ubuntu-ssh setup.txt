@@ -26,6 +26,11 @@ scp $env:USERPROFILE/.ssh/id_rsa.pub USERNAME@IPADDRESS:~/.ssh/authorized_keys
 	sudo adduser $ssh_user
 	sudo usermod --append --groups sudo $ssh_user;
 
+
+#Check to see what ports are open
+sudo ss -tupln
+
+
 #Get the IP Address
 	hostname -I
 
