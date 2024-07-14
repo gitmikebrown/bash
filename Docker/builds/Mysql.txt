@@ -1,0 +1,19 @@
+################################################################################################
+####   MySQL container
+################################################################################################
+
+#Helpful link: https://www.howtogeek.com/devops/how-to-run-mysql-in-a-docker-container/#connecting-to-mysql
+
+#to get the MySQL cli of a running container, use the following
+#docker exec -it my-mysql mysql -p
+
+
+
+#Mysql Latest
+docker run --name mysql-1 \
+-p 3306:3306 \
+-v $HOME/mysql-data:/var/lib/mysql \
+-e MYSQL_ROOT_PASSWORD=secret \
+-e MYSQL_USER=brown \
+-e MYSQL_PASSWORD=green \
+-d mysql

@@ -5,10 +5,6 @@ https://docs.docker.com/get-started/docker_cheatsheet.pdf
 docker run -d [image name] will run an image in the background
 
 
-#Powershell to see if port is working
-Test-NetConnection <address> -Port <port_number>
-
-
 ################################################################################################
 ####   Show containers
 ################################################################################################
@@ -58,102 +54,15 @@ docker rmi [image ID]
 
 
 
-################################################################################################
-####   MySQL container
-################################################################################################
-
-#Helpful link: https://www.howtogeek.com/devops/how-to-run-mysql-in-a-docker-container/#connecting-to-mysql
-
-#to get the MySQL cli of a running container, use the following
-docker exec -it my-mysql mysql -p
-
-
-docker run --name my-mysql -e MYSQL_ROOT_PASSWORD=secret -v $HOME/mysql-data:/var/lib/mysql -d mysql:8.0
 
 
 
-################################################################################################
-####   Postgress
-################################################################################################
 
-#https://hub.docker.com/_/postgres
 
-docker run --name my-postgres-1 -p 5432:5432 -e POSTGRES_PASSWORD=mysecretpassword -d postgres
 
 ################################################################################################
 ####   Build
 ################################################################################################
-
-#Build nginx webserver
-docker run -d --name nginx-server-1 -p 9000:80 nginx
-
-
-
-#postgres V16.3
-docker run --name postgres-1 -p 5432:5432 -e POSTGRES_PASSWORD=green -d postgres:16.3;
-
-#Mysql V Latest
-docker run --name mysql-1 -p 3306:3306 -v /my/own/datadir:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=secret -e MYSQL_USER=brown -e MYSQL_PASSWORD=green -d mysql
-
-#
-docker run --name phpmyadmin -d -e PMA_ARBITRARY=1 -p 8081:80 phpmyadmin
-
-
-################################################################################################
-####   Portainer
-################################################################################################
-
-sudo docker run -d \
--p 8000:8000 \
--p 9000:9000 \
---name=portainer \
---restart=always \
--v /var/run/docker.sock:/var/run/docker.sock \
--v portainer_data:/data portainer/portainer-ce
-
-
-################################################################################################
-####   VS code
-################################################################################################
-
-docker run -it --init \
-    -p 3000:3000 -p 9000:9000 -p 9443:9443 -p 8000:8000 \
-    -v /var/run/docker.sock:/var/run/docker.sock \
-    --name portainer-devkit \
-    portainer/dev-toolkit:2022.09
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

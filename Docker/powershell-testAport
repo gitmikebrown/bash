@@ -1,0 +1,5 @@
+
+
+
+#Powershell command to see if port is working
+Test-NetConnection <address> -Port <port_number>

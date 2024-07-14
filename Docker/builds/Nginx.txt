@@ -1,0 +1,5 @@
+
+
+
+#Build nginx webserver
+docker run -d --name nginx-server-1 -p 9000:80 nginx
