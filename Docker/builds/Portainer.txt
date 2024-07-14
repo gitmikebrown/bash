@@ -1,3 +1,15 @@
+################################################################################################
+####   helpful links
+################################################################################################
+####
+####    Link:https://stackoverflow.com/questions/57582453/is-there-a-suggested-list-of-values-for-laravels-app-env-variable-found-in-the
+####    Notes: Link provides APP_ENV options.  Options are: local/development/staging/production
+####    
+####    Link:https://panjeh.medium.com/laravel-app-env-local-app-env-production-difference-aa9662ac81d0
+####    Notes: Link provides a good APP_ENV explanation.
+####
+################################################################################################
+
 
 
 ################################################################################################

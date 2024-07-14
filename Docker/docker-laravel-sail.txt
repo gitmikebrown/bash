@@ -1,3 +1,0 @@
-curl -s "https://laravel.build/hr-dev&devcontainer" | bash
-
- cd hr-dev && ./vendor/bin/sail up

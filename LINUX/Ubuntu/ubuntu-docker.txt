@@ -10,3 +10,8 @@ sudo systemctl status docker
 
 #If docker is not running, try:
 sudo systemctl start docker
+
+
+
+#Install docker compose
+sudo apt install docker-compose

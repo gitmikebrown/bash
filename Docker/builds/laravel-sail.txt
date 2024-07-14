@@ -1,11 +1,14 @@
 ################################################################################################
-####   helpful links
+####   Laravel Sail
 ################################################################################################
 ####
-####    Link: https://hub.docker.com/_/phpmyadmin
-####    Notes: 
-####    
+####    Link: https://laravel.com/docs/11.x/sail
+####
+####    Link: https://github.com/laravel/sail
+####
 ################################################################################################
 
 
-docker run --name phpmyadmin -d -e PMA_ARBITRARY=1 -p 8080:80 phpmyadmin
+curl -s "https://laravel.build/hr-dev&devcontainer" | bash
+
+cd hr-dev && ./vendor/bin/sail up
