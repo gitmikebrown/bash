@@ -11,34 +11,57 @@
 ################################################################################################
 
  
+################################################################################################
+####   Access the MySQL CLI
+################################################################################################
 
-#to get the MySQL cli of a running container, use the following
-#sudo docker exec -it mysql-1 mysql -p
 
-docker run -it --user myuser my-mysql-container
+#root
+#sudo docker exec -it c-mysql-1 mysql -p
 
+#with user
+sudo docker exec -it c-mysql-1 mysql -p --user brown
+
+#See all users
+#mysql> SELECT User FROM mysql.user;
 
 ################################################################################################
 ####   UP - Build container
 ################################################################################################
 
 #Mysql Latest
-sudo docker run --name mysql-1 \
+sudo docker run --name c-mysql-1 \
 -p 3306:3306 \
--v $HOME/mysql-data:/var/lib/mysql \
+-v v-mysql-1:/var/lib/mysql \
 -e MYSQL_ROOT_PASSWORD=green \
--e MYSQL_ONETIME_PASSWORD=yes \
+-e MYSQL_ONETIME_PASSWORD=true \
 -e MYSQL_USER=brown \
 -e MYSQL_PASSWORD=green1 \
+-e MYSQL_DATABASE=laravel \
 -d mysql
 
-
-#See all users
-#mysql> SELECT User FROM mysql.user;
 
 
 ################################################################################################
 ####   DOWN - destroy container
 ################################################################################################
 
-sudo docker image rm mysql-1
+sudo docker stop c-mysql-1;
+sudo docker container rm c-mysql-1
+sudo docker volume rm v-mysql-1;
+#sudo docker image rm mysql;
+
+
+
+################################################################################################
+####   View the logs
+################################################################################################
+
+sudo docker logs c-mysql-1
+
+
+################################################################################################
+####   View all of the config file options
+################################################################################################
+
+sudo docker run -it --rm mysql --verbose --help

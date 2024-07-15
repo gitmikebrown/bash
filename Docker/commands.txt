@@ -9,7 +9,7 @@ docker run -d [image name] will run an image in the background
 ####   Delete everything - NUKE the server
 ################################################################################################
 
-docker system prune --all --volumes
+sudo docker system prune --all --volumes
 
 ################################################################################################
 ####   containers
@@ -55,4 +55,6 @@ docker rmi [image ID]
 ################################################################################################
 
 sudo docker volume ls
+
+sudo docker volumen rm [VOLUME_NAME]
 
