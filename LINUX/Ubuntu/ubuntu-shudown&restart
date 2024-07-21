@@ -1,0 +1,11 @@
+
+
+
+sudo systemctl reboot
+
+#20 min
+sudo shutdown -r +20
+
+
+#The best option
+sudo reboot now
