@@ -1,0 +1,57 @@
+version: '3'
+networks:
+    mysql-phpmyadmin:
+        name: mysql-phpmyadmin
+        driver: bridge
+
+volumes:
+    mysqldata:
+        driver: local
+        driver_opts:
+            type: 'none'
+            o: 'bind'
+            device: '${HOME}/server/mysql-phpmyadmin/data'
+
+services:
+    mysql:
+        build: path
+        env_file:
+            - ./config/dev.env
+        image: mysql:${MYSQL_VERSION}
+        container_name: mysql
+        restart: always
+        environment:
+            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+            - MYSQL_DATABASE=${MYSQL_DATABASE}
+            - MYSQL_USER=${MYSQL_USER}
+            - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+        ports:
+            - 6033:3306
+        volumes:
+            - mysqldata:/var/lib/mysql
+            # - ".db:/docker-entrypoint-initdb.d"
+        networks:
+            mysql-phpmyadmin:
+                aliases:
+                - mysql
+
+    phpmyadmin:
+        env_file:
+            - path ./config/dev.env
+            - re
+        depends_on:
+            - mysql
+        image: phpmyadmin:latest
+        container_name: phpmyadmin
+        restart: always
+        links:
+            - mysql
+        environment:
+            - PMA_HOST=mysql
+            - PMA_PORT=3306
+        ports:
+            - 8080:80
+        networks:
+            mysql-phpmyadmin:
+                aliases:
+                - phpmyadmin

@@ -14,4 +14,6 @@ sudo systemctl start docker
 
 
 #Install docker compose
-sudo apt install docker-compose
+#https://docs.docker.com/compose/install/linux/
+sudo apt-get update
+sudo apt-get install docker-compose-plugin
