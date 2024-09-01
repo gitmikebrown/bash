@@ -1,4 +1,8 @@
-
+#!/bin/bash
+# File: 
+# Author: Michael Brown
+# Date: 
+# Description: 
 
 
 sudo nano /etc/ssh/sshd_config

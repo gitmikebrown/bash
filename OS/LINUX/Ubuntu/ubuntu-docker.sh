@@ -1,3 +1,9 @@
+#!/bin/bash
+# File: 
+# Author: Michael Brown
+# Date: 
+# Description: 
+
 #install docker
 sudo apt install docker.io
 
