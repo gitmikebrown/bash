@@ -10,7 +10,7 @@
 #### 
 ####  Notes: this should be run from a putty session
 #### 
-#### 
+#### https://www.youtube.com/watch?v=33dEcCKGBO4&t=293s
 #### 
 ################################################################################################
 
