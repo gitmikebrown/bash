@@ -1,32 +1,54 @@
 #!/bin/bash
-# File: laravel-env-management.sh
+# File: ubuntu-UPDATE.sh
 # Author: Michael Brown
-# Date: July 4, 2024
-# Description: Manage Laravel .env file
+# Date: September 1, 2024
+# Description: Manage Ubuntu updates/upgrades
+
+################################################################################################
+#### Ubuntu - Update
+################################################################################################
+
+function ubuntuUpdate(){
+    sudo apt -y update;
+    sudo apt -y upgrade;
+    sudo apt -y dist-upgrade;
+    sudo apt -y autoremove;
+    sudo apt -y autoclean;
+}
+ubuntuUpdate
+
+################################################################################################
+#### Ubuntu - Update to latest version
+################################################################################################
+
+function ubuntuUpdateOS(){
+    #For ubuntu LTS only
+    do-release-upgrade
+}
+
+################################################################################################
+#### Ubuntu - Upgrade the packages that dont upgrade with apt upgrade
+################################################################################################
+
+function ubuntuUpgrade(){
+
+    #List upgradable
+    apt list --upgradable
+
+    #After updating/upgrading, some packages are still listed when running the "apt list --upgradable" command.
+    #This command will update those packages.  It needs to be run one at a time for each item listed.
+    sudo apt-get install --only-upgrade <packagename>
+
+}
 
 ################################################################################################
 #### Start
 ################################################################################################
-sudo apt -y update;
-sudo apt -y upgrade;
-sudo apt -y dist-upgrade;
-sudo apt -y autoremove;
-sudo apt -y autoclean;
 
-#OR
+function ubuntuFullUpgrade(){
 
-sudo apt -y update; sudo apt -y upgrade; sudo apt -y dist-upgrade; sudo apt -y autoremove; sudo apt -y autoclean;
+    #Full upgrade
+    sudo apt full-upgrade
 
-#For ubuntu LTS only
-do-release-upgrade
-
-#List upgradable
-apt list --upgradable
-
-#After updating/upgrading, some packages are still listed when running the "apt list --upgradable" command.
-#This command will update those packages.  It needs to be run one at a time for each item listed.
-sudo apt-get install --only-upgrade <packagename>
-
-#Full upgrade
-sudo apt full-upgrade
+}
 

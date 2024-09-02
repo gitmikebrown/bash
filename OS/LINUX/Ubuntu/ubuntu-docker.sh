@@ -4,22 +4,23 @@
 # Date: 
 # Description: 
 
-#install docker
-sudo apt install docker.io
 
-#enable the docker service
-sudo systemctl enable docker
+function dockerInstall (){
 
+    #install docker
+    sudo apt install docker.io
 
-#make sure docker is running
-sudo systemctl status docker
+    #enable the docker service
+    sudo systemctl enable docker
 
-#If docker is not running, try:
-sudo systemctl start docker
+    #Start the service
+    sudo systemctl start docker
 
+}
 
+function dockerStatus(){
 
-#Install docker compose
-#https://docs.docker.com/compose/install/linux/
-sudo apt-get update
-sudo apt-get install docker-compose-plugin
+    #make sure docker is running
+    sudo systemctl status docker
+
+}

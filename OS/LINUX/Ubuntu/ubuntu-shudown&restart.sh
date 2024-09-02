@@ -15,11 +15,19 @@
 ################################################################################################
 ####   Restart
 ################################################################################################
-sudo systemctl reboot
 
-#20 min
-sudo shutdown -r +20
+function ubuntuReboot(){
 
+    minutes=20
+    message='The compter will restart in $minutes'
 
-#The best option
-sudo reboot now
+    if [ $minutes -eq 0 ]; then
+
+        #The best option
+        sudo reboot now
+    else
+        #20 min
+        sudo shutdown -r +$minutes $message
+    fi
+}
+ubuntuReboot;

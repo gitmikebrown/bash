@@ -26,7 +26,7 @@ docker ps -a
 sudo docker containers ls
 
 #show only the container names
-docker ps --format "table {{.Names}}"
+sudo docker ps -a --format "table {{.Names}}"
 
 #Start a container
 docker start {CONTAINER ID}
