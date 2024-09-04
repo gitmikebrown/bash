@@ -22,6 +22,10 @@ ubuntuUpdate
 ################################################################################################
 
 function ubuntuUpdateOS(){
+
+    #Check what version is currently installed
+    lsb_release -a
+
     #For ubuntu LTS only
     do-release-upgrade
 }
