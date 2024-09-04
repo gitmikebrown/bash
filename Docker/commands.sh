@@ -58,3 +58,7 @@ sudo docker volume ls
 
 sudo docker volumen rm [VOLUME_NAME]
 
+
+#Inspect a volume
+docker volume inspect [VOLUME_NAME]
+
