@@ -9,8 +9,6 @@
 #### Update/Upgrade your package repository
 ################################################################################################
 
-#LTS update
-do-release-upgrade
 
 sudo apt -y update; sudo apt -y upgrade;
 

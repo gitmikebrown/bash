@@ -18,7 +18,7 @@
 
 function ubuntuReboot(){
 
-    minutes=20
+    minutes=0
     message='The compter will restart in $minutes'
 
     if [ $minutes -eq 0 ]; then
@@ -30,4 +30,4 @@ function ubuntuReboot(){
         sudo shutdown -r +$minutes $message
     fi
 }
-ubuntuReboot;
+#ubuntuReboot;
