@@ -22,7 +22,7 @@ function dockerUbuntuDown(){
 
     sudo docker stop ubuntu-1;
     sudo docker container rm ubuntu-1;
-    #sudo docker volume rm v-mysql-1;
+    #sudo docker volume rm ubuntu;
     sudo docker image rm ubuntu;
 
 }
