@@ -1,7 +1,7 @@
 #!/bin/bash
 # File: ubuntu-UPDATE.sh
 # Author: Michael Brown
-# Date: September 1, 2024
+# Date: December 1, 2024
 # Description: Manage Ubuntu updates/upgrades
 
 ################################################################################################
@@ -29,6 +29,7 @@ function ubuntuUpdateOS(){
     #For ubuntu LTS only
     do-release-upgrade
 }
+#ubuntuUpdateOS
 
 ################################################################################################
 #### Ubuntu - Upgrade the packages that dont upgrade with apt upgrade
@@ -44,6 +45,7 @@ function ubuntuUpgrade(){
     sudo apt-get install --only-upgrade <packagename>
 
 }
+#ubuntuUpgrade
 
 ################################################################################################
 #### Start
@@ -55,4 +57,4 @@ function ubuntuFullUpgrade(){
     sudo apt full-upgrade
 
 }
-
+#ubuntuFullUpgrade
