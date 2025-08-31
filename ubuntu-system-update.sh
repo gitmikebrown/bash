@@ -29,18 +29,18 @@ function showSystemSummary(){
     # Upgradeable packages
     echo ""
     echo "Checking for upgradeable packages..."
-    upgradable=$(apt list --upgradable 2>/dev/null | grep -v "Listing..." | wc -l)
-    echo "Packages available for upgrade: $upgradable"
+    upgradable_count=$(apt-get -s upgrade | awk '/^Inst /' | wc -l)
+    echo "Packages available for upgrade: $upgradable_count"
 
-    if [ "$upgradable" -gt 0 ]; then
+    if [ "$upgradable_count" -gt 0 ]; then
         echo "Sample upgradeable packages:"
-        apt list --upgradable 2>/dev/null | grep -v "Listing..." | head -5
+        apt-get -s upgrade | awk '/^Inst / {print $2}' | head -5
     fi
 
     # Full-upgrade simulation
     echo ""
     echo "Checking full-upgrade impact..."
-    full_upgrade_preview=$(apt -s full-upgrade | grep "^Inst")
+    full_upgrade_preview=$(apt-get -s dist-upgrade | awk '/^Inst /')
     if [ -z "$full_upgrade_preview" ]; then
         echo "No packages require full-upgrade."
     else
@@ -135,7 +135,7 @@ function ubuntuFullUpgrade(){
     echo "Checking for packages requiring full upgrade..."
 
     # Simulate full-upgrade to preview changes
-    pending=$(apt -s full-upgrade | grep "^Inst")
+    pending=$(apt-get -s dist-upgrade | awk '/^Inst /')
 
     if [ -z "$pending" ]; then
         echo "No packages require a full upgrade. System is up to date."
@@ -147,7 +147,7 @@ function ubuntuFullUpgrade(){
         if confirm "Would you like to proceed with the full upgrade?"; then
             log "User confirmed full upgrade"
             echo "Running full upgrade..."
-            sudo apt full-upgrade
+            sudo apt-get -y dist-upgrade
             log "Full upgrade complete"
         else
             echo "Full upgrade canceled."
