@@ -1,60 +1,215 @@
 #!/bin/bash
 # File: ubuntu-UPDATE.sh
 # Author: Michael Brown
-# Date: December 1, 2024
-# Description: Manage Ubuntu updates/upgrades
+# Version: 1.2.0
+# Date: Updated August 30, 2025
+# Description: Menu-driven Ubuntu update/upgrade manager with logging, input validation, and help
+
+################################################################################################
+#### Configurable Variables
+################################################################################################
+
+SCRIPT_VERSION="1.2.0"
+LOGGING_ENABLED=false
+LOGFILE="/var/log/ubuntu-update-script.log"
+
+################################################################################################
+#### System Summary
+################################################################################################
+
+function showSystemSummary(){
+    echo "======================================"
+    echo " Ubuntu System Summary"
+    echo "======================================"
+
+    # Current version
+    current_version=$(lsb_release -rs)
+    echo "Current Ubuntu Version: $current_version"
+
+    # Upgradeable packages
+    echo ""
+    echo "Checking for upgradeable packages..."
+    upgradable=$(apt list --upgradable 2>/dev/null | grep -v "Listing..." | wc -l)
+    echo "Packages available for upgrade: $upgradable"
+
+    if [ "$upgradable" -gt 0 ]; then
+        echo "Sample upgradeable packages:"
+        apt list --upgradable 2>/dev/null | grep -v "Listing..." | head -5
+    fi
+
+    # Full-upgrade simulation
+    echo ""
+    echo "Checking full-upgrade impact..."
+    full_upgrade_preview=$(apt -s full-upgrade | grep "^Inst")
+    if [ -z "$full_upgrade_preview" ]; then
+        echo "No packages require full-upgrade."
+    else
+        echo "Packages affected by full-upgrade:"
+        echo "$full_upgrade_preview" | head -5
+    fi
+
+    # Release upgrade availability
+    echo ""
+    echo "Checking for Ubuntu release upgrade..."
+    next_version=$(do-release-upgrade -c | grep "New release" | awk -F': ' '{print $2}')
+    if [ -z "$next_version" ]; then
+        echo "You are running the latest supported release."
+    else
+        echo "New Ubuntu release available: $next_version"
+    fi
+
+    echo "======================================"
+    pause
+}
+
+################################################################################################
+#### Utility Functions
+################################################################################################
+
+function log(){
+    if [ "$LOGGING_ENABLED" = true ]; then
+        echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" | tee -a "$LOGFILE"
+    fi
+}
+
+function pause(){
+    read -p "Press [Enter] to return to the menu..."
+}
+
+function confirm(){
+    read -p "$1 [y/N]: " response
+    [[ "$response" =~ ^[Yy]$ ]]
+}
 
 ################################################################################################
 #### Ubuntu - Update
 ################################################################################################
 
 function ubuntuUpdate(){
-    sudo apt -y update;
-    sudo apt -y upgrade;
-    sudo apt -y dist-upgrade;
-    sudo apt -y autoremove;
-    sudo apt -y autoclean;
+    log "Starting standard update and cleanup"
+    echo "Running standard update and cleanup..."
+    sudo apt -y update
+    sudo apt -y upgrade
+    sudo apt -y dist-upgrade
+    sudo apt -y autoremove
+    sudo apt -y autoclean
+    log "Standard update complete"
+    pause
 }
-ubuntuUpdate
 
 ################################################################################################
 #### Ubuntu - Update to latest version
 ################################################################################################
 
 function ubuntuUpdateOS(){
+    echo "Checking current Ubuntu version..."
+    current_version=$(lsb_release -rs)
+    echo "You are currently running Ubuntu $current_version."
 
-    #Check what version is currently installed
-    lsb_release -a
+    # Fetch available upgrade version (requires update-manager-core)
+    next_version=$(do-release-upgrade -c | grep "New release" | awk -F': ' '{print $2}')
 
-    #For ubuntu LTS only
-    do-release-upgrade
+    if [ -z "$next_version" ]; then
+        echo "You are already running the latest supported version."
+        log "OS upgrade check: already at latest version ($current_version)"
+    else
+        echo "A new Ubuntu version is available: $next_version"
+        if confirm "Would you like to upgrade to Ubuntu $next_version?"; then
+            log "User confirmed upgrade from $current_version to $next_version"
+            sudo do-release-upgrade
+            log "OS upgrade initiated"
+        else
+            echo "OS upgrade canceled."
+            log "OS upgrade canceled by user"
+        fi
+    fi
+    pause
 }
-#ubuntuUpdateOS
 
 ################################################################################################
-#### Ubuntu - Upgrade the packages that dont upgrade with apt upgrade
-################################################################################################
-
-function ubuntuUpgrade(){
-
-    #List upgradable
-    apt list --upgradable
-
-    #After updating/upgrading, some packages are still listed when running the "apt list --upgradable" command.
-    #This command will update those packages.  It needs to be run one at a time for each item listed.
-    sudo apt-get install --only-upgrade <packagename>
-
-}
-#ubuntuUpgrade
-
-################################################################################################
-#### Start
+#### Ubuntu - Full upgrade
 ################################################################################################
 
 function ubuntuFullUpgrade(){
+    log "Checking for packages requiring full upgrade"
+    echo "Checking for packages requiring full upgrade..."
 
-    #Full upgrade
-    sudo apt full-upgrade
+    # Simulate full-upgrade to preview changes
+    pending=$(apt -s full-upgrade | grep "^Inst")
 
+    if [ -z "$pending" ]; then
+        echo "No packages require a full upgrade. System is up to date."
+        log "Full upgrade skipped — no packages pending"
+    else
+        echo "The following packages are eligible for full upgrade:"
+        echo "$pending"
+        echo ""
+        if confirm "Would you like to proceed with the full upgrade?"; then
+            log "User confirmed full upgrade"
+            echo "Running full upgrade..."
+            sudo apt full-upgrade
+            log "Full upgrade complete"
+        else
+            echo "Full upgrade canceled."
+            log "Full upgrade canceled by user"
+        fi
+    fi
+    pause
 }
-#ubuntuFullUpgrade
+
+################################################################################################
+#### Help Menu
+################################################################################################
+
+function showHelp(){
+    echo "Ubuntu Update Manager - Version $SCRIPT_VERSION"
+    echo ""
+    echo "Menu Options:"
+    echo "  1) Standard Update & Cleanup - Runs apt update/upgrade and cleanup commands"
+    echo "  2) Upgrade to Latest Ubuntu Version - Uses do-release-upgrade for LTS upgrades"
+    echo "  3) Full Upgrade - Runs apt full-upgrade"
+    echo "  4) Help - Show this usage summary"
+    echo "  5) Exit - Quit the script"
+    pause
+}
+
+################################################################################################
+#### Menu Interface
+################################################################################################
+
+function showMenu(){
+    clear
+    echo "======================================"
+    echo " Ubuntu Update Manager - v$SCRIPT_VERSION"
+    echo "======================================"
+    echo "1) Standard Update & Cleanup"
+    echo "2) Upgrade to Latest Ubuntu Version"
+    echo "3) Full Upgrade"
+    echo "4) Help"
+    echo "5) Exit"
+    echo "======================================"
+    read -p "Choose an option [1-5]: " choice
+
+    if ! [[ "$choice" =~ ^[1-5]$ ]]; then
+        echo "Invalid input. Please enter a number between 1 and 5."
+        sleep 2
+        return
+    fi
+
+    case $choice in
+        1) ubuntuUpdate ;;
+        2) ubuntuUpdateOS ;;
+        3) ubuntuFullUpgrade ;;
+        4) showHelp ;;
+        5) echo "Exiting..."; log "Script exited by user"; exit 0 ;;
+    esac
+}
+
+################################################################################################
+#### Start Script with Persistent Loop
+################################################################################################
+
+showSystemSummary
+while true; do
+    showMenu
+done
