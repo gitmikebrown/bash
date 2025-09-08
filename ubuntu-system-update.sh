@@ -18,6 +18,8 @@ LOGFILE="/var/log/ubuntu-update-script.log"
 ################################################################################################
 
 function showSystemSummary(){
+#TODO: package manager is not incorporated into summary yet.  apt only at the moment.
+
     echo "======================================"
     echo " Ubuntu System Summary"
     echo "======================================"
@@ -82,10 +84,26 @@ function confirm(){
 }
 
 ################################################################################################
-#### Ubuntu - Update
+#### Detect Package Manager
 ################################################################################################
 
-function ubuntuUpdate(){
+function detectPackageManager() {
+    if command -v yum >/dev/null 2>&1; then
+        echo "yum"
+    elif command -v apt >/dev/null 2>&1; then
+        echo "apt"
+    else
+        echo "unknown"
+    fi
+}
+
+################################################################################################
+#### Update
+################################################################################################
+
+#### apt - Standard Update
+
+function aptUpdate(){
     log "Starting standard update and cleanup"
     echo "Running standard update and cleanup..."
     sudo apt -y update
@@ -95,6 +113,35 @@ function ubuntuUpdate(){
     sudo apt -y autoclean
     log "Standard update complete"
     pause
+}
+
+#### yum - AWS-style Update
+
+function yumUpdate() {
+    log "Starting AWS-style update and cleanup"
+    echo "Running yum-based update and cleanup..."
+    sudo yum -y update
+    sudo yum -y upgrade
+    sudo yum -y autoremove
+    sudo yum -y clean all
+    log "AWS-style update complete"
+    pause
+}
+
+#### Run Appropriate Update Based on Detected Package Manager
+
+function runUpdate() {
+    local pkgManager
+    pkgManager=$(detectPackageManager)
+
+    case "$pkgManager" in
+        yum)
+            yumUpdate
+            ;;
+        apt)
+            aptUpdate
+            ;;
+        esac
 }
 
 ################################################################################################
@@ -197,7 +244,7 @@ function showMenu(){
     fi
 
     case $choice in
-        1) ubuntuUpdate ;;
+        1) runUpdate ;;
         2) ubuntuUpdateOS ;;
         3) ubuntuFullUpgrade ;;
         4) showHelp ;;
