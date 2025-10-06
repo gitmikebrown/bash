@@ -245,29 +245,6 @@ We welcome contributions! Please:
 
 ---
 
-## 📄 **License**
-
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 🙏 **Acknowledgments**
-
-- **Linux Community** for comprehensive documentation
-- **AWS** for cloud-ready best practices
-- **Contributors** who help improve and test these scripts
-- **DevOps Community** for automation insights and feedback
-
----
-
-## 📞 **Support & Contact**
-
-- 🐛 **Issues**: [GitHub Issues](https://github.com/gitmikebrown/bash/issues)
-- 💡 **Feature Requests**: [Discussions](https://github.com/gitmikebrown/bash/discussions)
-- 📧 **Contact**: [GitHub Profile](https://github.com/gitmikebrown)
-
----
-
 <div align="center">
 
 **⭐ Star this repository if you find it useful! ⭐**
