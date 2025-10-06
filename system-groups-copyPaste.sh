@@ -2,7 +2,7 @@
 # File: 
 # Author: Michael Brown
 # Date: 
-# Description: 
+# Description:  Ubuntu groups management script 
 
 
 ################################################################################################

@@ -1,5 +1,5 @@
 #!/bin/bash
-# File: ubuntu-system-update.sh
+# File: system-update.sh
 # Author: Michael Brown
 # Version: 1.3.0
 # Date: Updated 10/5/2025

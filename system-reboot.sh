@@ -1,15 +1,22 @@
 #!/bin/bash
-# File: 
+# File: system-restart.sh
 # Author: Michael Brown
-# Date: 
-# Description: 
+# Date: 10/5/2025
+# Description:  System restart utility with flexible scheduling and cancellation options
+
+#Example usage:
+# ubuntuReboot 20m  # Restart in 20 minutes
+# ubuntuReboot 1h   # Restart in 1 hour
+# ubuntuReboot 0    # Immediate restart
+# ubuntuReboot c    # Cancel a scheduled restart
+# ubuntuReboot      # Prompt for immediate restart confirmation
 
 ################################################################################################
 ####   Restart
 ################################################################################################
 
 #!/bin/bash
-function ubuntuReboot() {
+function systemReboot() {
     
 
     # Validate timeValue is a number or "0"
@@ -79,4 +86,4 @@ function ubuntuReboot() {
     fi
 }
 
-ubuntuReboot 20m
+systemReboot 0
