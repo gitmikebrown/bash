@@ -6,6 +6,78 @@
 # Description: Menu-driven Ubuntu update/upgrade manager with logging, input validation, and help
 
 ################################################################################################
+#### HOW TO USE THIS SCRIPT - Examples and Quick Reference
+################################################################################################
+
+# BASIC USAGE:
+# Make the script executable first:
+#   chmod +x system-update.sh
+#
+# Run in interactive menu mode (shows a numbered menu with options 1-5):
+# Simply run the script without any parameters - this starts the interactive menu
+#   ./system-update.sh
+#
+# Run with command line options:
+#   ./system-update.sh                  # Starts the interactive menu
+#   ./system-update.sh --update-only    # Run standard update in quiet mode
+#   ./system-update.sh --full-upgrade   # Run full upgrade without menu
+#   ./system-update.sh --ubuntuUpdateOS # Run OS upgrade without menu
+
+# COMMON SCENARIOS:
+#
+# 1. First time running - interactive menu mode:
+#    ./system-update.sh
+#
+# 2. Regular interactive updates (menu-driven):
+#    ./system-update.sh
+#    Then select options 1-5 from the menu
+#
+# 3. Quick system update in quiet mode:
+#    ./system-update.sh --update-only
+#
+# 4. Run full upgrade without menu:
+#    ./system-update.sh --full-upgrade
+
+# MENU OPTIONS EXPLAINED:
+# When you run ./system-update.sh, you'll see a menu with these options:
+#   1. Update package lists         - Refreshes available package information
+#   2. Upgrade packages            - Installs available package updates
+#   3. Full system upgrade         - Complete system upgrade (dist-upgrade)
+#   4. Clean package cache         - Removes old downloaded package files
+#   5. Autoremove unused packages  - Removes packages no longer needed
+#   6. Show system information     - Displays system stats and package info
+#   0. Exit                        - Quit the script
+
+# CROSS-PLATFORM NOTES:
+# This script automatically detects your package manager:
+#   - Ubuntu/Debian systems: Uses 'apt' commands
+#   - RHEL/CentOS/Amazon Linux: Uses 'yum' commands
+#   - Fedora/RHEL 8+: Uses 'dnf' commands
+#
+# The menu options adapt automatically to your system's package manager
+
+# LOGGING:
+# To enable logging, edit the LOGGING_ENABLED variable below to 'true'
+# To change log file location, edit the LOGFILE variable below (default: /var/log/ubuntu-update-script.log)
+# Log file location: /var/log/ubuntu-update-script.log
+# View logs: sudo tail -f /var/log/ubuntu-update-script.log
+#
+# Example custom log locations:
+#   LOGFILE="/home/user/logs/system-update.log"        # User home directory
+#   LOGFILE="/tmp/system-update.log"                   # Temporary directory
+#   LOGFILE="/var/log/custom-update-$(date +%Y%m%d).log"  # Date-stamped logs
+
+# AUTOMATION EXAMPLES:
+# For EC2 user data or automation scripts:
+#   wget https://raw.githubusercontent.com/gitmikebrown/bash/main/system-update.sh
+#   chmod +x system-update.sh
+#   ./system-update.sh --update-only    # Run standard update automatically
+#
+# Or run specific functions programmatically by sourcing the script:
+#   source system-update.sh
+#   runUpdate                       # Call individual functions
+
+################################################################################################
 #### Configurable Variables
 ################################################################################################
 
