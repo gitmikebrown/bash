@@ -69,24 +69,3 @@ sudo echo "<VirtualHost *:80>
 sudo systemctl reload apache2
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
